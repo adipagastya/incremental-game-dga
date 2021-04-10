@@ -6,6 +6,8 @@ using static GameManager;
 
 public class ResourceController : MonoBehaviour
 {
+    public Button ResourceButton;
+    public Image ResourceImage;
     public Text ResourceDescription;
     public Text ResourceUpgradeCost;
     public Text ResourceUnlockCost;
@@ -24,6 +26,12 @@ public class ResourceController : MonoBehaviour
         ResourceUpgradeCost.text = $"Upgrade Cost\n{ GetUpgradeCost() }";
     }
 
+    // Start is called before the first frame update
+    void Start()
+    {
+        ResourceButton.onClick.AddListener(UpgradeLevel);
+    }
+
     public double GetOutput()
     {
         return _config.Output * _level;
@@ -39,10 +47,19 @@ public class ResourceController : MonoBehaviour
         return _config.UnlockCost;
     }
 
-    // Start is called before the first frame update
-    void Start()
+    public void UpgradeLevel()
     {
-        
+        double upgradeCost = GetUpgradeCost();
+        if(GameManager.Instance.TotalGold<upgradeCost)
+        {
+            return;
+        }
+
+        GameManager.Instance.AddGold(-upgradeCost);
+        _level++;
+
+        ResourceUpgradeCost.text = $"Upgrade Cost\n{ GetUpgradeCost() }";
+        ResourceDescription.text = $"{_config.Name} Lv.{_level}\n+{ GetOutput().ToString("0") }";
     }
 
     // Update is called once per frame
