@@ -43,7 +43,11 @@ public class AchievementController : MonoBehaviour
             _popUpShowDurationCounter -= Time.unscaledDeltaTime;
 
             // Lerp adalah fungsi linier interpolation, digunakan untuk mengubah value secara perlahan
-            _popUpTransform.localScale = Vector3.LerpUnclamped(_popUpTransform.localScale, Vector3.right, 0.5f);
+            _popUpTransform.localScale = Vector3.LerpUnclamped(_popUpTransform.localScale, Vector3.one, 0.5f);
+        }
+        else
+        {
+            _popUpTransform.localScale = Vector2.LerpUnclamped(_popUpTransform.localScale, Vector3.right, 0.5f);
         }
     }
 
