@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "726415536036",
+    "project_id": "incremental-game-dga",
+    "storage_bucket": "incremental-game-dga.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:726415536036:android:f7c51dbb039561a0e21b31",
+        "android_client_info": {
+          "package_name": "com.luck.incrementalgame"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "726415536036-h3qcbtaibidq5lp1fgbleo6noervml4e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBJ2JNQcrD3nI5O4RRbW8SXTSbAzYL6GxI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "726415536036-h3qcbtaibidq5lp1fgbleo6noervml4e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

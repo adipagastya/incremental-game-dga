@@ -21,6 +21,7 @@ public class GameManager : MonoBehaviour
     // Fungsi [Range(min, max)] ialah menjaga value tetap berada di antara min dan max-nya
     [Range(0f, 1f)]
     public float AutoCollectPercentage = 0.1f;
+    public float SaveDelay = 5f;
     public ResourceConfig[] ResourceConfigs;
     public Sprite[] ResourceSprites;
 
@@ -35,6 +36,7 @@ public class GameManager : MonoBehaviour
     private List<ResourceController> _activeResources = new List<ResourceController>();
     private List<TapText> _tapTextPool = new List<TapText>();
     private float _collectSecond;
+    private float _saveDelayCounter;
 
     public double TotalGold;
 
@@ -42,13 +44,18 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         AddAllResource();
+
+        GoldInfo.text = $"Gold: {UserDataManager.Progress.Gold.ToString("0")}";
     }
 
     // Update is called once per frame
     void Update()
     {
+        float deltaTime = Time.unscaledDeltaTime;
+        _saveDelayCounter -= deltaTime;
+
         // Fungsi untuk selalu mengeksekusi CollectPerSecond setiap detik
-        _collectSecond += Time.unscaledDeltaTime;
+        _collectSecond += deltaTime;
         if(_collectSecond>=1f)
         {
             CollectPerSecond();
@@ -64,12 +71,13 @@ public class GameManager : MonoBehaviour
     private void AddAllResource()
     {
         bool showResources = true;
+        int index = 0;
         foreach(ResourceConfig config in ResourceConfigs)
         {
             GameObject obj = Instantiate (ResourcePrefab.gameObject, ResourceParent, false);
             ResourceController resource = obj.GetComponent<ResourceController>();
 
-            resource.SetConfig(config);
+            resource.SetConfig(index,config);
             obj.gameObject.SetActive(showResources);
 
             if(showResources && !resource.IsUnlocked)
@@ -78,6 +86,7 @@ public class GameManager : MonoBehaviour
             }
 
             _activeResources.Add(resource);
+            index++;
         }
     }
 
@@ -101,12 +110,12 @@ public class GameManager : MonoBehaviour
 
             if (resource.IsUnlocked)
             {
-                isBuyable = TotalGold >= resource.GetUpgradeCost();
+                isBuyable = UserDataManager.Progress.Gold >= resource.GetUpgradeCost();
             }
 
             else
             {
-                isBuyable = TotalGold >= resource.GetUnlockCost();
+                isBuyable = UserDataManager.Progress.Gold >= resource.GetUnlockCost();
             }
 
             resource.ResourceImage.sprite = ResourceSprites[isBuyable ? 1 : 0];
@@ -134,7 +143,14 @@ public class GameManager : MonoBehaviour
     public void AddGold(double value)
     {
         TotalGold += value;
-        GoldInfo.text = $"Gold: {TotalGold.ToString("0")}";
+        GoldInfo.text = $"Gold: {UserDataManager.Progress.Gold.ToString("0")}";
+
+        UserDataManager.Save(_saveDelayCounter<0f);
+
+        if (_saveDelayCounter<0f)
+        {
+            _saveDelayCounter = SaveDelay;
+        }
     }
 
     public void CollectByTap (Vector3 tapPosition, Transform parent)
